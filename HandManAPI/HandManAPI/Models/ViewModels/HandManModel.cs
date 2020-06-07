@@ -8,6 +8,8 @@ namespace HandManAPI.Models
 {
     public class HandManModel
     {
+        public string ID { get; set; }
+ 
         [Required]
         public string Name { get; set; }
 
@@ -32,5 +34,6 @@ namespace HandManAPI.Models
        
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
+        public List<string> Reviews { get; set; }
     }
 }

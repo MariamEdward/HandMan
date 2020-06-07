@@ -69,6 +69,7 @@
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Name = c.String(nullable: false),
+                        Image = c.String(),
                     })
                 .PrimaryKey(t => t.ID);
             

@@ -13,7 +13,7 @@ namespace HandManAPI.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202006052339014_updates"; }
+            get { return "202006071859357_updates"; }
         }
         
         string IMigrationMetadata.Source

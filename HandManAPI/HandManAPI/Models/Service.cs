@@ -17,8 +17,8 @@ namespace HandManAPI.Models
         public int ID { get; set; }
         [Required]
         public string Name { get; set; }
-        
 
+        public string Image { get; set; }
         //not mapped into db so it is not useful
         [JsonIgnore]
         public  ICollection<HandMan> SubscribedHandMen { get; set; }

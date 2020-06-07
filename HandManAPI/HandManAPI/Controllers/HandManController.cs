@@ -1,4 +1,5 @@
 ﻿using HandManAPI.Models;
+using HandManAPI.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -16,6 +17,7 @@ namespace HandManAPI.Controllers
     {
 
         private AppDbContext dbContext = new AppDbContext();
+        private HandManService hmService = new HandManService();
 
         ////Usermanager
         //static AppDbContext dbcontext = new AppDbContext();
@@ -26,24 +28,12 @@ namespace HandManAPI.Controllers
         public IHttpActionResult Getall()
         {
             var handmanlist = new List<HandManModel>();
-            foreach (var item in dbContext.HandMen.ToList() )
+            foreach (var item in dbContext.HandMen.ToList())
             {
-                var user = dbContext.Users.FirstOrDefault(u => u.Id == item.ID);
-                var loc = dbContext.Locations.FirstOrDefault(l => l.ID == item.LocationId);
-                var serv = dbContext.services.FirstOrDefault(s => s.ID == item.ServiceId);
-                var newItem = new HandManModel
-                {
-                    Name = user.UserName,
-                    Email = user.Email,
-                    Region = item.Region,
-                    Latitude = loc.Latitude,
-                    Longtide = loc.Longtide,
-                    ServiceName = serv.Name,
-
-
-                };
-                handmanlist.Add(newItem);
+                var newHm = hmService.convertToModel(item);
+                handmanlist.Add(newHm);
             }
+              
             return Ok(handmanlist);
         }
 
@@ -62,34 +52,19 @@ namespace HandManAPI.Controllers
             {
                 return Ok<string>("there is no subscibers for this service");
             }
-            ////if(service.SubscribedHandMen.Count==0)
-            ////{             
-            ////   return Ok<string>("there is no handmen for this service");              
-            ////}
 
             var handmanlist = new List<HandManModel>();
             foreach (var item in hmen)
             {
-                var user = dbContext.Users.FirstOrDefault(u => u.Id == item.ID);
-                var loc = dbContext.Locations.FirstOrDefault(l => l.ID == item.LocationId);
-                var serv = dbContext.services.FirstOrDefault(s => s.ID == item.ServiceId);
-                var newItem = new HandManModel
-                {
-                    Name = user.UserName,
-                    Email = user.Email,
-                    Region = item.Region,
-                    Latitude = loc.Latitude,
-                    Longtide = loc.Longtide,
-                    ServiceName = serv.Name,
-
-
-                };
+                var newItem = hmService.convertToModel(item);
                 handmanlist.Add(newItem);
             }
            
             return Ok(handmanlist);
         }
 
+       
+        //get all by service and region
         [Route("getall/{servId}/{regName}")]
         public IHttpActionResult GetallByServiceAndRegion(int servId,string regName)
         {
@@ -104,28 +79,11 @@ namespace HandManAPI.Controllers
             {
                 return Ok<string>("there is no subscibers for this service");
             }
-            ////if(service.SubscribedHandMen.Count==0)
-            ////{             
-            ////   return Ok<string>("there is no handmen for this service");              
-            ////}
 
             var handmanlist = new List<HandManModel>();
             foreach (var item in hmen)
             {
-                var user = dbContext.Users.FirstOrDefault(u => u.Id == item.ID);
-                var loc = dbContext.Locations.FirstOrDefault(l => l.ID == item.LocationId);
-                var serv = dbContext.services.FirstOrDefault(s => s.ID == item.ServiceId);
-                var newItem = new HandManModel
-                {
-                    Name = user.UserName,
-                    Email = user.Email,
-                    Region = item.Region,
-                    Latitude = loc.Latitude,
-                    Longtide = loc.Longtide,
-                    ServiceName = serv.Name,
-
-
-                };
+                var newItem = hmService.convertToModel(item);
                 handmanlist.Add(newItem);
             }
 
@@ -144,20 +102,7 @@ namespace HandManAPI.Controllers
             {
                 return NotFound();
             }
-            var user = dbContext.Users.Find(id);
-            var loc = dbContext.Locations.Find(handman.LocationId);
-            var ser = dbContext.services.Find(handman.ServiceId);
-  
-            var hman = new HandManModel
-            {
-                Name = user.UserName,
-                Email = user.Email,
-                Region = handman.Region,
-                Latitude = loc.Latitude,
-                Longtide = loc.Longtide,
-                ServiceName = ser.Name, //not sure if it will work
-
-             };
+            var hman = hmService.convertToModel(handman);
 
             //var hman = new HandManModel
             //{
@@ -231,7 +176,7 @@ namespace HandManAPI.Controllers
             dbContext.Users.Remove(user);
             dbContext.SaveChanges();
 
-            return Ok();
+            return Ok("Deleted");
         }
 
 
