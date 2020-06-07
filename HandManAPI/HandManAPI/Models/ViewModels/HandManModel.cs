@@ -35,5 +35,6 @@ namespace HandManAPI.Models
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
         public List<string> Reviews { get; set; }
+        public float Rate { get; set; }
     }
 }

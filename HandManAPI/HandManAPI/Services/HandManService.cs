@@ -33,6 +33,7 @@ namespace HandManAPI.Services
                 Longtide = loc.Longtide,
                 ServiceName = serv.Name,
                 Reviews = reviews,
+                Rate=_hman.Rate
             };
             return newhman;
         }
